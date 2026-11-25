@@ -1,4 +1,4 @@
 # https://www.robotstxt.org/robotstxt.html
-Sitemap: https://xivintheshell.com/sitemap.txt
+Sitemap: https://ffxivshell.neko7ina.com/sitemap.txt
 User-agent: *
 Disallow:
