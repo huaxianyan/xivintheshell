@@ -1,0 +1,49 @@
+# 构建并发布到 gh-pages，供自建实例拉取。
+#
+# 存在意义：本 fork 不直接使用上游构建好的产物，而是从源码自己构建，
+# 这样 FFLogs 的 client_id 才能指向 ffxivshell.neko7ina.com。
+#
+# 链路：push main → 本工作流构建 → 推 gh-pages → GitHub Webhook
+#       → SevenWebhook 触发服务器 update.sh → releases/<sha> + current 切换。
+# Webhook 挂在 gh-pages 上，收到触发时产物已经就绪。
+
+name: Deploy to gh-pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish build to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: gh-pages
+          commit_message: "deploy: ${{ github.sha }}"
