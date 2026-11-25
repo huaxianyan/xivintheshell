@@ -1,3 +1,4 @@
+# Self-hosted mirror: https://ffxivshell.neko7ina.com
 # https://www.robotstxt.org/robotstxt.html
 Sitemap: https://ffxivshell.neko7ina.com/sitemap.txt
 User-agent: *
